@@ -1,0 +1,95 @@
+<!doctype html><html lang="ru"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Первичная настройка Ubuntu VPS: SSH-ключи, UFW, fail2ban и обновления</title><meta name="description" content="Пошаговая настройка нового VPS на Ubuntu: отдельный пользователь, SSH-ключи, отключение входа по паролю, UFW, fail2ban, автообновления и swap."><link rel="canonical" href="https://vps.lainos.online/articles/nastroika-ubuntu-vps/">
+<meta name="robots" content="index,follow,max-snippet:-1,max-image-preview:large">
+<meta property="og:type" content="article"><meta property="og:title" content="Первичная настройка Ubuntu VPS: SSH-ключи, UFW, fail2ban и обновления"><meta property="og:description" content="Пошаговая настройка нового VPS на Ubuntu: отдельный пользователь, SSH-ключи, отключение входа по паролю, UFW, fail2ban, автообновления и swap."><meta property="og:url" content="https://vps.lainos.online/articles/nastroika-ubuntu-vps/"><meta property="og:locale" content="ru_RU"><meta property="og:site_name" content="VPS на практике">
+<meta name="yandex-verification" content="a39d48587ac618b0" /><meta name="twitter:card" content="summary"><link rel="alternate" type="application/rss+xml" title="VPS на практике" href="https://vps.lainos.online/rss.xml">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='12' fill='%230b6bcb'/%3E%3Ctext x='32' y='43' font-size='30' text-anchor='middle' fill='white' font-family='monospace'%3E%3E_%3C/text%3E%3C/svg%3E">
+<style>
+:root{--bg:#fff;--fg:#1a1d21;--mut:#5b6470;--line:#e3e7ec;--acc:#0b6bcb;--card:#f5f7fa;--code:#0f1720;--codefg:#e6edf3}
+@media(prefers-color-scheme:dark){:root{--bg:#0f1318;--fg:#e6e9ee;--mut:#9aa5b1;--line:#252c35;--acc:#5aa9ff;--card:#171d25}}
+*{box-sizing:border-box}html{-webkit-text-size-adjust:100%}
+body{margin:0;background:var(--bg);color:var(--fg);font:17px/1.7 system-ui,-apple-system,Segoe UI,Roboto,sans-serif}
+a{color:var(--acc)}header,main,footer{max-width:760px;margin:0 auto;padding:0 16px}
+header{display:flex;justify-content:space-between;align-items:center;padding-top:14px;padding-bottom:14px;border-bottom:1px solid var(--line);flex-wrap:wrap;gap:8px}
+.logo{font-weight:700;text-decoration:none;color:var(--fg)}nav a{margin-left:14px;text-decoration:none}
+h1{font-size:2rem;line-height:1.25;margin:1.2em 0 .4em}h2{font-size:1.4rem;margin:1.8em 0 .5em;line-height:1.3}
+pre{background:var(--code);color:var(--codefg);padding:14px;border-radius:8px;overflow:auto;font-size:.88rem;line-height:1.5}
+code{font-family:ui-monospace,Menlo,Consolas,monospace;font-size:.92em}p code,li code,td code{background:var(--card);padding:1px 5px;border-radius:4px}
+table{border-collapse:collapse;width:100%;display:block;overflow-x:auto;margin:1em 0}td,th{border:1px solid var(--line);padding:8px 10px;text-align:left;font-size:.94rem}th{background:var(--card)}
+.meta{color:var(--mut);font-size:.9rem}.toc{background:var(--card);border-radius:10px;padding:12px 18px;margin:1.2em 0}.toc ol{margin:.3em 0;padding-left:20px}
+.cta{border:1px solid var(--acc);border-radius:12px;padding:16px 18px;margin:1.8em 0;background:var(--card)}.cta p{margin:.4em 0}.cta small{display:block;color:var(--mut);margin-top:8px}
+.btn{display:inline-block;background:var(--acc);color:#fff;padding:10px 18px;border-radius:8px;text-decoration:none;font-weight:600;margin-top:6px}
+.cards{display:grid;gap:14px;margin:1.2em 0}.card{border:1px solid var(--line);border-radius:12px;padding:14px 16px;text-decoration:none;color:var(--fg);display:block}.card:hover{border-color:var(--acc)}.card b{display:block;font-size:1.05rem}.card span{color:var(--mut);font-size:.92rem}
+footer{border-top:1px solid var(--line);margin-top:3em;padding-top:18px;padding-bottom:30px;color:var(--mut);font-size:.88rem}
+.crumbs{font-size:.88rem;color:var(--mut);margin-top:14px}details{border:1px solid var(--line);border-radius:8px;padding:10px 14px;margin:8px 0}summary{cursor:pointer;font-weight:600}
+</style><script type="application/ld+json">{"@context": "https://schema.org", "@type": "Article", "headline": "Первичная настройка Ubuntu VPS: безопасность за 15 минут", "description": "Пошаговая настройка нового VPS на Ubuntu: отдельный пользователь, SSH-ключи, отключение входа по паролю, UFW, fail2ban, автообновления и swap.", "inLanguage": "ru", "datePublished": "2026-11-05", "dateModified": "2026-11-05", "mainEntityOfPage": "https://vps.lainos.online/articles/nastroika-ubuntu-vps/", "author": {"@type": "Organization", "name": "VPS на практике", "url": "https://vps.lainos.online"}, "publisher": {"@type": "Organization", "name": "VPS на практике", "url": "https://vps.lainos.online"}, "keywords": "настройка vps ubuntu, безопасность vps, ssh ключи, ufw, fail2ban"}</script><script type="application/ld+json">{"@context": "https://schema.org", "@type": "FAQPage", "mainEntity": [{"@type": "Question", "name": "Безопасно ли отключать вход по паролю?", "acceptedAnswer": {"@type": "Answer", "text": "Да, при условии что вход по SSH-ключу уже проверен. Ключ надёжнее любого пароля и не подбирается ботами."}}, {"@type": "Question", "name": "Нужно ли менять порт SSH?", "acceptedAnswer": {"@type": "Answer", "text": "Не обязательно. Смена порта уменьшает шум в логах, но настоящую защиту дают ключи и fail2ban."}}, {"@type": "Question", "name": "Что делать, если потерял доступ по SSH?", "acceptedAnswer": {"@type": "Answer", "text": "Большинство хостеров дают веб-консоль (VNC) в панели управления, через неё можно исправить конфигурацию SSH."}}]}</script><script type="application/ld+json">{"@context": "https://schema.org", "@type": "BreadcrumbList", "itemListElement": [{"@type": "ListItem", "position": 1, "name": "Главная", "item": "https://vps.lainos.online/"}, {"@type": "ListItem", "position": 2, "name": "Статьи", "item": "https://vps.lainos.online/articles/"}, {"@type": "ListItem", "position": 3, "name": "Первичная настройка Ubuntu VPS: безопасность за 15 минут", "item": "https://vps.lainos.online/articles/nastroika-ubuntu-vps/"}]}</script></head><body>
+<header><a class="logo" href="/">▸ VPS на практике</a><nav><a href="/articles/">Статьи</a><a href="/about/">О сайте</a></nav></header>
+<main><div class="crumbs"><a href="/">Главная</a> › <a href="/articles/">Статьи</a></div>
+<article><h1>Первичная настройка Ubuntu VPS: безопасность за 15 минут</h1><p class="meta">Обновлено: 2026-11-05 · чтение ~2 мин</p><nav class="toc" aria-label="Содержание"><b>Содержание</b><ol><li><a href="#s-1">1. Подключение и обновление</a></li><li><a href="#s-2">2. Создайте обычного пользователя</a></li><li><a href="#s-3">3. Настройте вход по SSH-ключу</a></li><li><a href="#s-4">4. Отключите вход по паролю и под root</a></li><li><a href="#s-5">5. Файрвол UFW</a></li><li><a href="#s-6">6. fail2ban против подбора паролей</a></li><li><a href="#s-7">7. Автоматические обновления безопасности</a></li><li><a href="#s-8">8. Swap на маленьком сервере</a></li><li><a href="#s-9">9. Чек-лист после настройки</a></li></ol></nav>
+<p>Новый сервер в интернете начинают сканировать боты уже через минуты после выдачи IP. Если оставить вход под root по паролю, рано или поздно подберут. Эта инструкция — минимальный набор, который закрывает 95% типичных проблем. Команды проверены на Ubuntu 22.04/24.04.</p>
+
+<h2 id="s-1">1. Подключение и обновление</h2>
+<pre><code>ssh root@IP_СЕРВЕРА
+apt update &amp;&amp; apt upgrade -y
+timedatectl set-timezone Europe/Moscow</code></pre>
+
+<h2 id="s-2">2. Создайте обычного пользователя</h2>
+<pre><code>adduser deploy
+usermod -aG sudo deploy</code></pre>
+<p>Работайте под <code>deploy</code>, а root оставьте для экстренных случаев.</p>
+
+<h2 id="s-3">3. Настройте вход по SSH-ключу</h2>
+<p>На своём компьютере (Linux/macOS/Windows PowerShell):</p>
+<pre><code>ssh-keygen -t ed25519 -C "my-vps"
+ssh-copy-id deploy@IP_СЕРВЕРА</code></pre>
+<p>Проверьте, что вход под <code>deploy</code> работает без пароля, прежде чем идти дальше.</p>
+
+<h2 id="s-4">4. Отключите вход по паролю и под root</h2>
+<pre><code>sudo nano /etc/ssh/sshd_config.d/99-hardening.conf</code></pre>
+<pre><code>PasswordAuthentication no
+PermitRootLogin no
+PubkeyAuthentication yes</code></pre>
+<pre><code>sudo sshd -t &amp;&amp; sudo systemctl restart ssh</code></pre>
+<p><b>Важно:</b> не закрывайте текущую сессию, пока не откроете вторую и не убедитесь, что вход по ключу работает.</p>
+
+<h2 id="s-5">5. Файрвол UFW</h2>
+<pre><code>sudo ufw allow OpenSSH
+sudo ufw allow 80,443/tcp
+sudo ufw enable
+sudo ufw status verbose</code></pre>
+<p>Открывайте только те порты, которые нужны. Для WireGuard, например, добавится UDP-порт.</p>
+
+<h2 id="s-6">6. fail2ban против подбора паролей</h2>
+<pre><code>sudo apt install -y fail2ban
+sudo systemctl enable --now fail2ban
+sudo fail2ban-client status sshd</code></pre>
+<p>По умолчанию он банит IP после нескольких неудачных попыток входа.</p>
+
+<h2 id="s-7">7. Автоматические обновления безопасности</h2>
+<pre><code>sudo apt install -y unattended-upgrades
+sudo dpkg-reconfigure --priority=low unattended-upgrades</code></pre>
+
+<aside class="cta"><strong>Пока нет сервера для практики?</strong><p>Я использую VPS-хостинг Aeza: быстрая выдача сервера, оплата без танцев, выбор локаций. Актуальные тарифы и наличие локаций смотрите на сайте — они меняются.</p><a class="btn" href="https://aeza.ru/?ref=467715" rel="sponsored nofollow noopener" target="_blank">Посмотреть тарифы Aeza →</a><small>Партнёрская ссылка: сервис получает вознаграждение, цена для вас не меняется.</small></aside>
+
+<h2 id="s-8">8. Swap на маленьком сервере</h2>
+<p>Если RAM 1 ГБ или меньше, swap спасает от падений при пиках нагрузки:</p>
+<pre><code>sudo fallocate -l 1G /swapfile
+sudo chmod 600 /swapfile
+sudo mkswap /swapfile
+sudo swapon /swapfile
+echo '/swapfile none swap sw 0 0' | sudo tee -a /etc/fstab</code></pre>
+
+<h2 id="s-9">9. Чек-лист после настройки</h2>
+<ul>
+<li>вход только по ключу, root отключён;</li>
+<li>UFW включён, открыты только нужные порты;</li>
+<li>fail2ban запущен;</li>
+<li>обновления безопасности ставятся автоматически;</li>
+<li>есть резервная копия важных данных.</li>
+</ul>
+<p>Следующий шаг — <a href="/articles/sajt-na-vps-nginx-ssl/">разместить сайт с HTTPS</a> или <a href="/articles/telegram-bot-na-vps/">запустить Telegram-бота</a>.</p>
+
+<h2>Частые вопросы</h2><details><summary>Безопасно ли отключать вход по паролю?</summary><p>Да, при условии что вход по SSH-ключу уже проверен. Ключ надёжнее любого пароля и не подбирается ботами.</p></details><details><summary>Нужно ли менять порт SSH?</summary><p>Не обязательно. Смена порта уменьшает шум в логах, но настоящую защиту дают ключи и fail2ban.</p></details><details><summary>Что делать, если потерял доступ по SSH?</summary><p>Большинство хостеров дают веб-консоль (VNC) в панели управления, через неё можно исправить конфигурацию SSH.</p></details></article>
+<h2>Читайте также</h2><div class="cards"><a class="card" href="/articles/vps-vs-vds-vs-hosting/"><b>VPS vs VDS vs виртуальный хостинг vs dedicated: что выбрать</b><span>Понятное сравнение VPS, VDS, виртуального хостинга и выделенного сервера: ресурсы, цена, сложность, безопасность и сценарии использования.</span></a><a class="card" href="/articles/aeza-obzor/"><b>Обзор Aeza: что нужно знать перед заказом VPS</b><span>Обзор VPS-хостинга Aeza: для каких задач подходит, на что обратить внимание при выборе тарифа и локации, как проверить сервер после выдачи.</span></a><a class="card" href="/articles/telegram-bot-na-vps/"><b>Telegram-бот на VPS: запуск 24/7 через systemd</b><span>Пошаговая инструкция: как перенести Telegram-бота на Python на VPS, настроить виртуальное окружение, автозапуск через systemd и просмотр логов.</span></a></div></main>
+<footer><p>VPS на практике — Практические инструкции по VPS: настройка, боты, сайты, WireGuard, Docker.</p><p>Раскрытие: на сайте есть партнёрские ссылки на хостинг Aeza. Они не увеличивают цену для вас, но приносят автору вознаграждение. <a href="/about/">Подробнее</a>.</p><p>© 2026</p></footer>
+</body></html>
