@@ -48,7 +48,7 @@ def page(path,title,desc,body,canonical,extra_head="",og_type="website"):
 <title>{e(title)}</title><meta name="description" content="{e(desc)}"><link rel="canonical" href="{url}">
 <meta name="robots" content="index,follow,max-snippet:-1,max-image-preview:large">
 <meta property="og:type" content="{og_type}"><meta property="og:title" content="{e(title)}"><meta property="og:description" content="{e(desc)}"><meta property="og:url" content="{url}"><meta property="og:locale" content="ru_RU"><meta property="og:site_name" content="{NAME}">
-<meta name="yandex-verification" content="a39d48587ac618b0" /><meta name="twitter:card" content="summary"><link rel="alternate" type="application/rss+xml" title="{NAME}" href="{SITE}/rss.xml">
+<meta name="yandex-verification" content="a39d48587ac618b0" /><meta name="google-site-verification" content="Yp9jwHr4COqJ1m2GRLwet1UMlz9AoIvd9c-SAXJsfBM" /><meta name="twitter:card" content="summary"><link rel="alternate" type="application/rss+xml" title="{NAME}" href="{SITE}/rss.xml">
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='12' fill='%230b6bcb'/%3E%3Ctext x='32' y='43' font-size='30' text-anchor='middle' fill='white' font-family='monospace'%3E%3E_%3C/text%3E%3C/svg%3E">
 <style>{CSS}</style>{extra_head}</head><body>
 <header><a class="logo" href="/">▸ {NAME}</a><nav><a href="/articles/">Статьи</a><a href="/about/">О сайте</a></nav></header>
