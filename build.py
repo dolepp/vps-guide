@@ -195,7 +195,7 @@ for n,a in enumerate(ARTS):
 secs=''.join(f'<div class="sec"><h2>{t}</h2><p>{s}</p></div><div class="grid">{"".join(card(bymap[x]) for x in l)}</div>' for t,s,l in SECTIONS)
 home=f'''<section class="hero"><div class="wrap"><h1>VPS без боли: <em>пошаговые инструкции</em> с рабочими командами</h1>
 <p class="lead">Как выбрать сервер, защитить его и запустить на нём бота, сайт, WireGuard или n8n. Выберите ресурсы под задачу, пройдите инструкцию и настройте резервные копии.</p>
-<div class="actions"><a class="btn" href="/articles/kak-vybrat-vps/">Начать с выбора VPS →</a><a class="btn ghost" href="/articles/">Все {len(ARTS)} статей</a></div>
+<div class="actions"><a class="btn" href="/choose/">Подобрать VPS под задачу →</a><a class="btn ghost" href="/articles/">Все {len(ARTS)} статей</a></div>
 <div class="badges"><span class="badge">Ubuntu 22.04 / 24.04</span><span class="badge">✓ Команды копируются одной кнопкой</span><span class="badge">✓ Для новичков и практиков</span></div></div></section>
 <div class="wrap">{secs}
 <div class="promo"><div><h2>Нужен сервер для практики?</h2><p>Все инструкции подходят для любого VPS на Ubuntu. Сравните подходящие конфигурации и доступные локации Aeza перед заказом.</p><small>Партнёрская ссылка: цена для вас не меняется. <a style="color:#fff" href="/articles/aeza-obzor/">Читать обзор Aeza</a></small></div><a class="btn" href="{REF}" rel="sponsored nofollow noopener" target="_blank">Тарифы Aeza →</a></div></div>'''
