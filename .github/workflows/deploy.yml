@@ -1,0 +1,37 @@
+name: Validate and publish site
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+concurrency:
+  group: pages
+  cancel-in-progress: false
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Build static pages
+        run: python3 build.py
+      - name: Validate HTML and referral links
+        run: python3 check_site.py docs https://vps.lainos.online
+      - name: Validate browser JavaScript
+        run: node --check assets/growth.js
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: docs
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - uses: actions/configure-pages@v5
+      - name: Publish to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4

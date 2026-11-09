@@ -1,7 +1,8 @@
 REF = "https://aeza.ru/?ref=467715"
 
 def cta(text="Нужен сервер под эту задачу?"):
-    return f'''<aside class="cta"><strong>{text}</strong><p>Я использую VPS-хостинг Aeza: быстрая выдача сервера, оплата без танцев, выбор локаций. Актуальные тарифы и наличие локаций смотрите на сайте — они меняются.</p><a class="btn" href="{REF}" rel="sponsored nofollow noopener" target="_blank">Посмотреть тарифы Aeza →</a><small>Партнёрская ссылка: сервис получает вознаграждение, цена для вас не меняется.</small></aside>'''
+    return f'''<aside class="cta"><strong>{text}</strong><p>Подберите CPU, память и диск под свою задачу. Перед заказом сравните доступные локации, условия резервного копирования и итоговую стоимость в Aeza.</p><a class="btn" href="{REF}" data-placement="article-inline" rel="sponsored nofollow noopener" target="_blank">Подобрать VPS в Aeza →</a><small>Реклама · партнёрская ссылка. Автор может получить вознаграждение.</small></aside>'''
+
 
 A = []
 
